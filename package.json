@@ -1,0 +1,96 @@
+{
+	"name": "spon.js",
+	"version": "0.0.1",
+	"description": "spon",
+	"keywords": [],
+	"homepage": "https://github.com/magicspon/spon.js#readme",
+	"bugs": {
+		"url": "https://github.com/magicspon/spon.js/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/magicspon/spon.js.git"
+	},
+	"license": "",
+	"author": {
+		"name": "magicspon@gmail.com"
+	},
+	"files": [
+		"build"
+	],
+	"main": "build/index.cjs.js",
+	"module": "build/index.esm.js",
+	"browser": "build/index.js",
+	"style": "build/index.css",
+	"scripts": {
+		"build": "rollup -c",
+		"codecov": "codecov",
+		"lint": "eslint --ext .js,.jsx .",
+		"test": "BABEL_ENV=test jest src/ --no-cache"
+	},
+	"jest": {
+		"collectCoverage": true,
+		"collectCoverageFrom": [
+			"src/**/*.{js,jsx}"
+		],
+		"coveragePathIgnorePatterns": [
+			"/node_modules/",
+			"(.stories)\\.(jsx)$"
+		],
+		"moduleNameMapper": {
+			"\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+			"\\.(css|scss)$": "identity-obj-proxy"
+		},
+		"setupFiles": [
+			"./src/setupTest.js"
+		],
+		"testPathIgnorePatterns": [
+			"<rootDir>/build/",
+			"<rootDir>/node_modules/"
+		]
+	},
+	"dependencies": {
+		"deep-object-diff": "^1.1.0",
+		"dom-delegate": "^2.2.0",
+		"framesync": "^4.0.1",
+		"history": "^4.7.2",
+		"mitt": "^1.1.3",
+		"quicklink": "^1.0.0",
+		"raf-throttle": "^2.0.3",
+		"stylefire": "^2.4.0",
+		"url-parse": "^1.4.4"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.0.0-beta.54",
+		"@babel/core": "^7.0.0-beta.54",
+		"@babel/preset-env": "^7.0.0-beta.54",
+		"@babel/plugin-proposal-class-properties": "^7.3.0",
+		"@babel/plugin-syntax-dynamic-import": "^7.2.0",
+		"@babel/plugin-transform-async-to-generator": "^7.2.0",
+		"@babel/plugin-transform-runtime": "^7.2.0",
+		"babel-core": "^7.0.0-bridge.0",
+		"babel-jest": "22.4.3",
+		"codecov": "^3.0.2",
+		"eslint": "^4.19.1",
+		"eslint-config-airbnb": "^16.1.0",
+		"eslint-plugin-import": "^2.9.0",
+		"identity-obj-proxy": "^3.0.0",
+		"jest": "^22.4.3",
+		"rollup": "^0.58.1",
+		"rollup-plugin-babel": "^4.0.0-beta.4",
+		"rollup-plugin-babel-minify": "^4.0.0",
+		"rollup-plugin-commonjs": "^9.1.0",
+		"rollup-plugin-filesize": "^1.5.0",
+		"rollup-plugin-local-resolve": "^1.0.7",
+		"rollup-plugin-node-resolve": "^3.3.0",
+		"rollup-plugin-peer-deps-external": "^2.1.0",
+		"rollup-plugin-postcss": "^1.5.1",
+		"rollup-plugin-terser": "^1.0.1",
+		"source-map-loader": "^0.2.3"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"_id": "spon.js@0.0.1",
+	"readme": "https://github.com/magicspon/spon.js#readme"
+}

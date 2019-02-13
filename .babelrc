@@ -1,0 +1,31 @@
+{
+	"env": {
+		"test": {
+			"presets": [
+				[
+					"@babel/preset-env",
+					{
+						"modules": "umd"
+					}
+				]
+			]
+		},
+		"production": {
+			"presets": [
+				[
+					"@babel/preset-env",
+					{
+						"modules": false
+					}
+				]
+			]
+		}
+	},
+	"ignore": ["node_modules/**", "*.test.js"],
+	"plugins": [
+		"@babel/plugin-syntax-dynamic-import",
+		"@babel/plugin-proposal-class-properties",
+		"@babel/plugin-transform-runtime",
+		"@babel/plugin-transform-async-to-generator"
+	]
+}
