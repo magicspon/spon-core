@@ -69,7 +69,7 @@ export default function({ node }) {
 ```
 
 ```javascript
-import { connect } from '@spon/store'
+import { connect } from './store'
 import { withDomEvents } from '@spon/core'
 
 function example({ node, addEvents }) {
@@ -117,7 +117,7 @@ No… not react… I just like the name, seemed suitable
 ```
 
 ```javascript
-import { connect } from '@spon/store'
+import { connect } from './store'
 import { withDomEvents, withRefs } from '@spon/core'
 
 function example({ node, addEvents, refs }) {
@@ -194,7 +194,7 @@ export default store
 Standard rematch code…. Back to our module.
 
 ```javascript
-import { connect } from '@spon/store'
+import { connect } from './store'
 import { withDomEvents, withRefs } from '@spon/core'
 
 // removed other code for brevity
@@ -236,7 +236,7 @@ In this example I’m using `lit-html` to handle dom updates.
 ```javascript
 import { render as h, html } from 'lit-html'
 import { withRefs, withDomEvents } from '@spon/core'
-import { connect } from '@spon/store'
+import { connect } from './store'
 
 function basket(props) {
 	const {
