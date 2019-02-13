@@ -1,12 +1,16 @@
-Working in progress
+Work in progress
 
 This has not been used in production...
 
 There are some tests, could do with more.
 
+Demo: [spon.ui](https://sponjs.netlify.com/components/preview/sandbox)
+
+Source: [spon-ui/src/js at master · magicspon/spon-ui · GitHub](https://github.com/magicspon/spon-ui/tree/master/src/js)
+
 # spon.js
 
-spon.js is a little framework for loading javascript modules on traditional server rendered websites. It provides fluid page transitions, a delegated event system and a simple plugin system for extending behaviours. At its root, spon.js takes a DOM node with a `data-spon="example"` attribute, and loads a corresponding javascript module. All modules are single chunks that are asynchronous loaded.
+spon.js is a light weight framework for loading javascript modules on traditional server rendered websites. It provides fluid page transitions, a delegated event system and a simple plugin system for extending behaviours. At its root, spon.js takes a DOM node with a `data-spon="example"` attribute, and loads a corresponding javascript module. All modules are single chunks that are asynchronous loaded.
 
 ## Getting Started
 
@@ -24,11 +28,14 @@ import { loadApp } from '@spon/core'
 
 Now call the function, passing in the root node, typically this would be `document.body`
 
+The seconard argument is the options object. The only property is fetch. This function should
+return a dyanmically imported module
+
 ```javascript
 import { loadApp } from '@spon/core'
 
 const app = loadApp(document.body, {
-	fetch: name => import(`/path-to-behaviours/${name}`)
+	fetch: name => import(`/behaviours/${name}`)
 })
 ```
 
@@ -297,4 +304,52 @@ export default connect({
 	store: [mapState, mapDispatch],
 	plugins: [withDomEvents, withRefs]
 })(basket)
+```
+
+## Router
+
+With zero config you get super quick page loads. Pages are prefetched during idle time with using [GitHub - GoogleChromeLabs/quicklink: ⚡️Faster subsequent page-loads by prefetching in-viewport links during idle time](https://github.com/GoogleChromeLabs/quicklink)
+
+You can create custom transtions by either giving a value to the data-route node or by using the url of the page.
+
+```html
+<div id="page-wrapper">
+	<div data-route="my-route">
+		... stuff
+	</div>
+</div>
+```
+
+```javascript
+import myRoute from './somewhre'
+
+const { routes } = app.plugins
+
+routes.add('my-route', myRoute)
+```
+
+```javascript
+export default function myRoute() {
+	return {
+		container: createNode(document.getElementById('page-wrapper')),
+
+		async onExit({ update, prevHtml }) {
+			// so stuff
+			await update(next => {
+				prevHtml.node.parentNode.removeChild(prevHtml.node)
+				// call next when you're done
+				next()
+			})
+		},
+
+		async onEnter({ update, newHtml }) {
+			const { node } = newHtml
+
+			this.container.node.appendChild(node)
+
+			// call next when you're done
+			await update(next => next())
+		}
+	}
+}
 ```
