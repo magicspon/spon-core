@@ -1,6 +1,6 @@
 // @ts-check
-import diff from 'deep-object-diff';
-import sync from 'framesync';
+import { diff } from 'deep-object-diff'
+import sync from 'framesync'
 
 /**
  * @function mapStateToRenderHelper
@@ -9,12 +9,12 @@ import sync from 'framesync';
  * @return {object}
  */
 function mapStateToRenderHelper(state, watch) {
-  return watch.length > 0
-    ? watch.reduce((acc, key) => {
-      acc[key] = state[key];
-      return acc;
+	return watch.length > 0
+		? watch.reduce((acc, key) => {
+				acc[key] = state[key]
+				return acc
 		  }, {})
-    : state;
+		: state
 }
 
 /**
@@ -25,10 +25,10 @@ function mapStateToRenderHelper(state, watch) {
  * @return {object}
  */
 function mapStateToRender(prevState, current, watch) {
-  return {
-    prev: mapStateToRenderHelper(prevState, watch),
-    current: mapStateToRenderHelper(current, watch),
-  };
+	return {
+		prev: mapStateToRenderHelper(prevState, watch),
+		current: mapStateToRenderHelper(current, watch)
+	}
 }
 
 /**
@@ -38,23 +38,27 @@ function mapStateToRender(prevState, current, watch) {
  * @return {function}
  */
 function bindStoreToRender(state, store) {
-  let prevState = store.getState();
-  const listen = Object.keys(state);
-  // return a function, that when called
-  // will return a new function that when
-  // called will run any valid render methods
-  return fn => () => {
-    const current = store.getState();
-    const { prev, current: newState } = mapStateToRender(prevState, current, listen);
-    const changes = diff(prev, newState);
+	let prevState = store.getState()
+	const listen = Object.keys(state)
+	// return a function, that when called
+	// will return a new function that when
+	// called will run any valid render methods
+	return fn => () => {
+		const current = store.getState()
+		const { prev, current: newState } = mapStateToRender(
+			prevState,
+			current,
+			listen
+		)
+		const changes = diff(prev, newState)
 
-    sync.render(() => {
-      if (Object.keys(changes).length) {
-        fn({ prev, current: newState });
-      }
-      prevState = current;
-    });
-  };
+		sync.render(() => {
+			if (Object.keys(changes).length) {
+				fn({ prev, current: newState })
+			}
+			prevState = current
+		})
+	}
 }
 
 /**
@@ -66,7 +70,7 @@ function bindStoreToRender(state, store) {
  * @return {function}
  */
 export default function bindConnect(globalStore, registerPlugins) {
-  /**
+	/**
 	 * @function connect
 	 * @memberOf connect
 	 * @inner
@@ -75,27 +79,27 @@ export default function bindConnect(globalStore, registerPlugins) {
 	 * @param {array|undefined} fns any remaining plugins
 	 * @return {function}
 	 */
-  return function connect({ store, plugins = [] }) {
-    /**
+	return function connect({ store, plugins = [] }) {
+		/**
 		 * @param {function} module the module to bind to
 		 * @memberOf connect
 		 * @return {function}
 		 */
-    return (module) => {
-      let render;
-      let localState;
-      let storeItem;
-      if (store) {
-        const [state, dispatch] = store;
-        localState = state(globalStore.getState());
-        render = bindStoreToRender(localState, globalStore);
+		return module => {
+			let render
+			let localState
+			let storeItem
+			if (store) {
+				const [state, dispatch] = store
+				localState = state(globalStore.getState())
+				render = bindStoreToRender(localState, globalStore)
 
-        storeItem = {
-          ...localState,
-          ...dispatch(globalStore.dispatch),
-        };
-      }
-      /**
+				storeItem = {
+					...localState,
+					...dispatch(globalStore.dispatch)
+				}
+			}
+			/**
 			 * @memberOf connect
 			 * @inner
 			 * @property {object} props the module argument object
@@ -103,8 +107,8 @@ export default function bindConnect(globalStore, registerPlugins) {
 			 * @property {object} props.[...props] any other props
 			 * @return {function}
 			 */
-      return ({ key, ...props }) =>
-      /**
+			return ({ key, ...props }) =>
+				/**
 				 * @memberOf connect
 				 * @inner
 				 * @property {object} props the module argument object
@@ -115,25 +119,28 @@ export default function bindConnect(globalStore, registerPlugins) {
 				 *
 				 * @return {function}
 				 */
-				 module({
-          ...props,
-          render: (fn) => {
-            // add the current modules subscription function
-            // to the function cache used by the core app loader
-            registerPlugins(key)(globalStore.subscribe(render(fn)));
-          },
-          store: { ...storeItem },
-          plugins: {
-            ...plugins.reduce((acc, curr) => ({
-              ...acc,
-              ...curr({
-                register: registerPlugins(key),
-                globalStore,
-                ...props,
-              }),
-            }), {}),
-          },
-        });
-    };
-  };
+				module({
+					...props,
+					render: fn => {
+						// add the current modules subscription function
+						// to the function cache used by the core app loader
+						registerPlugins(key)(globalStore.subscribe(render(fn)))
+					},
+					store: { ...storeItem },
+					plugins: {
+						...plugins.reduce(
+							(acc, curr) => ({
+								...acc,
+								...curr({
+									register: registerPlugins(key),
+									globalStore,
+									...props
+								})
+							}),
+							{}
+						)
+					}
+				})
+		}
+	}
 }
