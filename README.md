@@ -12,6 +12,32 @@ Source: [spon-ui/src/js at master · magicspon/spon-ui · GitHub](https://github
 
 spon.js is a light weight framework for loading javascript modules on traditional server rendered websites. It provides fluid page transitions, a delegated event system and a simple plugin system for extending behaviours. At its root, spon.js takes a DOM node with a `data-spon="example"` attribute, and loads a corresponding javascript module. All modules are single chunks that are asynchronous loaded.
 
+## Install
+
+`yarn add @spon/core`
+
+or
+
+`npm install @spon/core --save`
+
+all the things!
+
+```javascript
+export {
+	loadApp,
+	cache,
+	registerPlugin,
+	router,
+	connect,
+	refs,
+	withRefs,
+	createNode,
+	eventBus,
+	domEvents,
+	withDomEvents
+} from '@spon/core'
+```
+
 ## Getting Started
 
 Write some html.
