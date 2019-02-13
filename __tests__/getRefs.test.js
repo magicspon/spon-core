@@ -1,4 +1,4 @@
-import getRefs from '../../src/js/core/modules/refs'
+import { refs as getRefs } from '../src/'
 
 describe('test createNode', () => {
 	document.body.innerHTML = `<div id="node">

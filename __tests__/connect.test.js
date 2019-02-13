@@ -1,5 +1,5 @@
 import { init } from '@rematch/core'
-import { connect as bindConnect, registerPlugin } from '../../src/js/core'
+import { connect as bindConnect, registerPlugin } from '../src/'
 
 let store
 

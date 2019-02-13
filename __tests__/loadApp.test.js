@@ -1,5 +1,5 @@
 import { wait } from 'dom-testing-library'
-import { loadApp, cache } from '../../src/js/core'
+import { loadApp, cache } from '../src/'
 
 describe('test loadApp', () => {
 	document.body.innerHTML = `<div id="root">
@@ -28,7 +28,9 @@ describe('test loadApp', () => {
 	})
 
 	beforeAll(() => {
-		app = loadApp(document.getElementById('root'))
+		app = loadApp(document.getElementById('root'), {
+			fetch: name => import(`${__dirname}/behaviour/${name}`)
+		})
 	})
 
 	afterAll(() => {

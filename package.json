@@ -1,6 +1,6 @@
 {
 	"name": "@spon/core",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"description": "spon",
 	"keywords": [],
 	"homepage": "https://github.com/magicspon/sponjs#readme",
@@ -24,27 +24,34 @@
 		"build": "rollup -c",
 		"codecov": "codecov",
 		"lint": "eslint --ext .js,.jsx .",
-		"test": "BABEL_ENV=test jest src/ --no-cache"
+		"test": "jest",
+		"test:watch": "jest --watch"
 	},
 	"jest": {
-		"collectCoverage": true,
-		"collectCoverageFrom": [
-			"src/**/*.{js,jsx}"
-		],
-		"coveragePathIgnorePatterns": [
-			"/node_modules/",
-			"(.stories)\\.(jsx)$"
-		],
-		"moduleNameMapper": {
-			"\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
-			"\\.(css|scss)$": "identity-obj-proxy"
-		},
+		"testURL": "http://localhost:3000/",
 		"setupFiles": [
-			"./src/setupTest.js"
+			"<rootDir>/setup-jest.js"
+		],
+		"collectCoverageFrom": [
+			"src/js/core/**/*.{js,jsx,ts,tsx}",
+			"!**/node_modules/**",
+			"!cypress/**"
+		],
+		"testMatch": [
+			"**/?(*.)(spec|test).js?(x)"
 		],
 		"testPathIgnorePatterns": [
-			"<rootDir>/build/",
-			"<rootDir>/node_modules/"
+			"/node_modules/",
+			"/cypress"
+		]
+	},
+	"quokka": {
+		"babel": {
+			"env": "test"
+		},
+		"installPackageCommand": "yarn add {packageName}",
+		"plugins": [
+			"jsdom-quokka-plugin"
 		]
 	},
 	"dependencies": {
@@ -64,17 +71,23 @@
 		"@babel/plugin-proposal-class-properties": "^7.3.0",
 		"@babel/plugin-syntax-dynamic-import": "^7.2.0",
 		"@babel/plugin-transform-async-to-generator": "^7.2.0",
+		"@babel/plugin-transform-modules-commonjs": "^7.2.0",
 		"@babel/plugin-transform-runtime": "^7.2.0",
 		"@babel/preset-env": "^7.0.0-beta.54",
 		"@babel/runtime": "^7.3.1",
+		"@rematch/core": "^1.0.6",
 		"babel-core": "^7.0.0-bridge.0",
 		"babel-jest": "22.4.3",
+		"babel-plugin-dynamic-import-node": "^2.2.0",
 		"codecov": "^3.0.2",
+		"dom-testing-library": "^3.16.5",
 		"eslint": "^4.19.1",
 		"eslint-config-airbnb": "^16.1.0",
 		"eslint-plugin-import": "^2.9.0",
 		"identity-obj-proxy": "^3.0.0",
-		"jest": "^22.4.3",
+		"jest": "^24.1.0",
+		"jest-dom": "^3.1.0",
+		"jsdom-quokka-plugin": "^1.0.13",
 		"rollup": "^0.58.1",
 		"rollup-plugin-babel": "^4.0.0-beta.4",
 		"rollup-plugin-babel-minify": "^4.0.0",

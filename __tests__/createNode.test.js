@@ -1,4 +1,4 @@
-import { createNode } from '../../src/js/core'
+import { createNode } from '../src/'
 
 describe('test createNode', () => {
 	document.body.innerHTML =
