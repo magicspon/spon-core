@@ -1,5 +1,5 @@
 {
-	"name": "spon.js",
+	"name": "@spon/core",
 	"version": "0.0.1",
 	"description": "spon",
 	"keywords": [],
@@ -11,10 +11,8 @@
 		"type": "git",
 		"url": "git+https://github.com/magicspon/spon.js.git"
 	},
-	"license": "",
-	"author": {
-		"name": "magicspon@gmail.com"
-	},
+	"license": "MIT",
+	"author": "magicspon@gmail.com",
 	"files": [
 		"build"
 	],
@@ -90,7 +88,5 @@
 	},
 	"publishConfig": {
 		"access": "public"
-	},
-	"_id": "spon.js@0.0.1",
-	"readme": "https://github.com/magicspon/spon.js#readme"
+	}
 }
