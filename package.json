@@ -3,13 +3,13 @@
 	"version": "0.0.8",
 	"description": "spon",
 	"keywords": [],
-	"homepage": "https://github.com/magicspon/sponjs#readme",
+	"homepage": "https://github.com/magicspon/spon-core#readme",
 	"bugs": {
-		"url": "https://github.com/magicspon/sponjs/issues"
+		"url": "https://github.com/magicspon/spon-core/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/magicspon/sponjs.git"
+		"url": "git+https://github.com/magicspon/spon-core.git"
 	},
 	"license": "MIT",
 	"author": "magicspon@gmail.com",
