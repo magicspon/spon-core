@@ -34,8 +34,11 @@ function domEvents(node = document.body) {
 
 		Object.entries(events).forEach(([key, fn]) => {
 			const [event, selector] = key.split(' ')
-			eventStore.add(`${event} ${selector}`, { fn, rootNode })
-			rootNode.on(event, selector, fn)
+			const func = typeof fn === 'function' ? fn : fn[0]
+			const capture = typeof fn === 'function' ? false : fn[1]
+
+			eventStore.add(`${event} ${selector}`, { func, rootNode, capture })
+			rootNode.on(event, selector, func, capture)
 		})
 	}
 
@@ -48,9 +51,9 @@ function domEvents(node = document.body) {
 	 */
 	function removeEvent(key) {
 		const [event, selector] = key.split(' ')
-		const { fn, rootNode } = eventStore.store[key]
+		const { func, rootNode, capture } = eventStore.store[key]
 
-		rootNode.off(event, selector, fn)
+		rootNode.off(event, selector, func, capture)
 	}
 
 	/**

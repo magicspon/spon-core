@@ -1,6 +1,6 @@
 {
 	"extends": ["airbnb", "prettier", "plugin:jest/recommended"],
-	"plugins": ["import", "cypress"],
+	"plugins": ["import"],
 	"rules": {
 		"consistent-return": "off",
 		"func-names": "off",
@@ -32,8 +32,7 @@
 	},
 	"env": {
 		"browser": true,
-		"es6": true,
-		"cypress/globals": true
+		"es6": true
 	},
 	"globals": {
 		"log": true,

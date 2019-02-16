@@ -8,7 +8,7 @@ module.exports = function(wallaby) {
 				pattern: 'node_modules/babel-polyfill/dist/polyfill.js',
 				instrument: false
 			},
-			{ pattern: 'src/js/**/*.js' }
+			{ pattern: 'src/**/*.js' }
 		],
 
 		tests: [{ pattern: '__tests__/**/*.test.js' }],

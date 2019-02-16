@@ -119,4 +119,25 @@ describe('test domEvents', () => {
 		expect(eventObject).toBeInstanceOf(MouseEvent)
 		expect(node.classList.contains('test')).toBe(true)
 	})
+
+	it('should apply the capture value when an array is passed as the event value', () => {
+		const container = document.getElementById('test')
+		const node = container.querySelector('[data-testid="button3"]')
+
+		const { addEvents } = domEvents()
+		let eventObject
+		const onClick1 = jest.fn((e, node) => {
+			eventObject = e
+			node.classList.add('test')
+		})
+
+		addEvents({
+			'click [data-testid="button3"]': [onClick1, true]
+		})
+
+		node.click()
+
+		expect(eventObject).toBeInstanceOf(MouseEvent)
+		expect(node.classList.contains('test')).toBe(true)
+	})
 })
