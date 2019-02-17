@@ -4,10 +4,11 @@
  * @function preventClick
  * @param {MouseEvent} e
  * @param {HTMLAnchorElement} node
+ * @param {string} ignoreProp
  * @return {boolean}
  */
 
-export function preventClick(e, node) {
+export function preventClick(e, node, ignoreProp) {
 	if (!window.history.pushState) return false
 
 	const { href } = node
@@ -35,7 +36,7 @@ export function preventClick(e, node) {
 	if (node.getAttribute && typeof node.getAttribute('download') === 'string')
 		return false
 
-	if (node.hasAttribute('data-no-route')) return false
+	if (node.hasAttribute(ignoreProp)) return false
 
 	return true
 }
@@ -43,11 +44,12 @@ export function preventClick(e, node) {
 /**
  * @function getKey
  * @param {HTMLElement} context
+ * @param {string} pageSelector
  * @return {(string|boolean)}
  */
-export function getKey(context) {
+export function getKey(context, pageSelector) {
 	/** @type {HTMLElement} */
-	const target = context.querySelector('[data-route]')
+	const target = context.querySelector(pageSelector)
 	if (!target) return false
 
 	const { route: transitionName } = target.dataset
@@ -61,12 +63,13 @@ export function getKey(context) {
 /**
  * @function fetcher
  * @param {string} path
+ * @param {object} fetchOptions
  * @return {Promise<array>}
  */
-export async function fetcher(path) {
+export async function fetcher(path, fetchOptions) {
 	const arr = []
 
-	await fetch(path)
+	await fetch(path, fetchOptions)
 		.then(resp => {
 			if (!resp.ok) {
 				arr[1] = resp.status
@@ -164,7 +167,7 @@ export function createStore(
 		 * @return {Promise}
 		 */
 		dispatch: async function dispatch(params) {
-			const { href, key } = params
+			const { href, key, fetchOptions } = params
 
 			const cached = store.cache[href]
 
@@ -175,7 +178,7 @@ export function createStore(
 				return
 			}
 
-			const [resp] = await fetcher(href)
+			const [resp] = await fetcher(href, fetchOptions)
 
 			if (resp) {
 				const data = {

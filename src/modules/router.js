@@ -1,9 +1,11 @@
 // @ts-check
 
 import url from 'url-parse'
-import quicklink from 'quicklink/dist/quicklink'
 import createHistory from 'history/createBrowserHistory'
 import sync from 'framesync'
+import pathToRegexp from 'path-to-regexp'
+import domEvents from './domEvents'
+import { createNode } from './refs'
 import {
 	preventClick,
 	getKey,
@@ -25,14 +27,18 @@ const noop = () => {}
  * @description this is a sponjs plugin. When it's called with the use function
  * a number of methods and event hooks are supplied
  * @param {object} props
- * @param {function} props.domEvents
- * @param {function} props.createNode
- * @param {function} props.hydrateApp
- * @param {function} props.destroyApp
  * @param {object} props.eventBus
+ * @param {object} props.settings
  * @return {PageTransitionManager}
  */
-function router({ domEvents, createNode, hydrateApp, destroyApp, eventBus }) {
+function router({
+	eventBus,
+	settings = {
+		rootNode: document.getElementById('page-wrapper'),
+		ignoreProp: 'data-no-route',
+		pageSelector: '[data-route]'
+	}
+}) {
 	const isIE =
 		!!navigator.userAgent.match(/Trident/g) ||
 		!!navigator.userAgent.match(/MSIE/g)
@@ -44,7 +50,10 @@ function router({ domEvents, createNode, hydrateApp, destroyApp, eventBus }) {
 
 	const store = createStore({
 		current: {
-			key: getKey(/** @type {HTMLElement} */ document.body),
+			key: getKey(
+				/** @type {HTMLElement} */ document.body,
+				settings.pageSelector
+			),
 			params: url(window.location.href),
 			html: ''
 		},
@@ -71,7 +80,12 @@ function router({ domEvents, createNode, hydrateApp, destroyApp, eventBus }) {
 	const transitions = {
 		default: {
 			name: 'default',
-			container: createNode(document.getElementById('page-wrapper')),
+			container: createNode(settings.rootNode),
+			fetchOptions: {
+				headers: {
+					'X-Spon-Header': 'X-Spon-Header'
+				}
+			},
 
 			async onExit({ update, prevHtml }) {
 				await update(next => {
@@ -87,13 +101,10 @@ function router({ domEvents, createNode, hydrateApp, destroyApp, eventBus }) {
 			}
 		}
 	}
+
 	let prevHtml = null
 	let action
 	let running = false
-
-	quicklink({
-		origins: ['localhost']
-	})
 
 	/**
 	 * @function start
@@ -115,26 +126,16 @@ function router({ domEvents, createNode, hydrateApp, destroyApp, eventBus }) {
 		/** @type {any} */
 		const doc = parser.parseFromString(html, 'text/html')
 		const { transition: nextTransition, name: nextName } = getTrans(
-			getKey(doc),
+			getKey(doc, settings.pageSelector),
 			pathname
 		)
-		const newHtml = createNode(doc.querySelector('[data-route]'))
-
-		quicklink({
-			ignores: [
-				uri => {
-					return !historyStack.stack.includes(uri)
-				}
-			]
-		})
+		const newHtml = createNode(doc.querySelector(settings.pageSelector))
 
 		const commonProps = {
 			prevHtml, // old wrapper
 			newHtml, // just the stuff in the wrapper
 			update,
-			doc, // the entire html response
-			hydrateApp,
-			destroyApp
+			doc // the entire html response
 		}
 
 		const exitProps = {
@@ -182,18 +183,41 @@ function router({ domEvents, createNode, hydrateApp, destroyApp, eventBus }) {
 	 */
 	async function goTo(params) {
 		running = true
-		const key = getKey(document.body)
-		const rootNode = createNode(document.querySelector('[data-route]'))
+
+		const tKey = Object.keys(transitions).reduce((acc, key) => {
+			const regexp = pathToRegexp(key)
+			if (regexp.exec(params.pathname)) {
+				if (acc.length) {
+					if (acc.length < key.length) {
+						acc = key
+					}
+				} else {
+					acc = key
+				}
+			}
+
+			return acc
+		}, '')
+
+		const transitionItem = transitions[tKey || 'default']
+
+		const key = getKey(document.body, settings.pageSelector)
+
+		const rootNode = createNode(document.querySelector(settings.pageSelector))
 		if (!rootNode) {
 			throw new Error('data-route missing from current page ')
 		}
 		prevHtml = rootNode
-		eventBus.emit('route:before/onExit')
+		eventBus.emit('route:before/onExit', { params })
 
-		await store.dispatch({ ...params, key: key || null })
+		await store.dispatch({
+			...params,
+			key: key || null,
+			fetchOptions: transitionItem.fetchOptions
+		})
 		await start(store.getState())
 
-		eventBus.emit('route:after/onExit')
+		eventBus.emit('route:after/onExit', { params })
 	}
 
 	history.listen((location, event) => {
@@ -201,18 +225,20 @@ function router({ domEvents, createNode, hydrateApp, destroyApp, eventBus }) {
 		action = event
 		if (event === 'POP') {
 			historyStack.pop()
-			if (!historyStack.isEmpty()) {
-				goTo({
-					...params,
-					href: historyStack.peek()
-				})
-			} else {
-				goTo({
-					...params,
-					href: window.location.href
-				})
-			}
+			goTo({
+				...params,
+				href: !historyStack.isEmpty()
+					? historyStack.peek()
+					: window.location.href
+			})
 		}
+
+		eventBus.emit('route:history/change', {
+			location,
+			event,
+			params,
+			historyStack
+		})
 	})
 
 	/**
@@ -223,15 +249,17 @@ function router({ domEvents, createNode, hydrateApp, destroyApp, eventBus }) {
 	 * @return {void}
 	 */
 	function clickHandle(e, elm) {
-		if (preventClick(e, elm)) {
+		if (preventClick(e, elm, settings.ignoreProp)) {
 			e.preventDefault()
 			const { href } = elm
 			const params = url(href)
 			if (history.location.pathname === params.pathname) {
 				return
 			}
+
 			if (!running) {
 				historyStack.push(href)
+				eventBus.emit('route:click', { elm, params })
 				goTo(params)
 			}
 		}

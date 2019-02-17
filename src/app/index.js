@@ -3,8 +3,6 @@ import sync from 'framesync'
 import throttle from 'raf-throttle'
 import { createStore, registerPlugins } from '../utils'
 import eventBus from '../modules/eventBus'
-import domEvents from '../modules/domEvents'
-import { createNode } from '../modules/refs'
 
 // create a cache object
 // this is used to store any active modules
@@ -66,11 +64,9 @@ function loadModule({ module, node, name, keepAlive, key }) {
  * will add a routes item to the plugins cache
  * @function use
  * @param {object} plugins an array to store the plugins in
- * @param {function} hydrate the app hydrate function
- * @param {function} destroy the app destroy function
  * @return {Use}
  */
-function use(plugins, hydrate, destroy) {
+function use(plugins) {
 	/**
 	 * @function addPlugin
 	 * @param {string} key
@@ -80,10 +76,6 @@ function use(plugins, hydrate, destroy) {
 	 */
 	function addPlugin(key, func, options = {}) {
 		const plug = func({
-			domEvents,
-			createNode,
-			hydrateApp: hydrate,
-			destroyApp: destroy,
 			eventBus,
 			...options
 		})
@@ -239,7 +231,7 @@ export default function loadApp(context, { fetch: fetchModule }) {
 		hydrate,
 		destroy,
 		...eventBus,
-		use: use(plugins, hydrate, destroy),
+		use: use(plugins),
 		get plugins() {
 			return plugins
 		}

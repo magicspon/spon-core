@@ -105,8 +105,6 @@ describe('test loadApp', () => {
 
 		it('plugins should recieve some props', () => {
 			app.use('fn', props => {
-				expect(props.hydrateApp).toBeInstanceOf(Function)
-				expect(props.destroyApp).toBeInstanceOf(Function)
 				expect(props.eventBus).toBeInstanceOf(Object)
 			})
 		})

@@ -1,6 +1,6 @@
 {
 	"name": "@spon/core",
-	"version": "0.0.9",
+	"version": "0.0.10",
 	"description": "spon",
 	"keywords": [],
 	"homepage": "https://github.com/magicspon/spon-core#readme",
@@ -60,7 +60,7 @@
 		"framesync": "^4.0.1",
 		"history": "^4.7.2",
 		"mitt": "^1.1.3",
-		"quicklink": "^1.0.0",
+		"path-to-regexp": "^3.0.0",
 		"raf-throttle": "^2.0.3",
 		"stylefire": "^2.4.0",
 		"url-parse": "^1.4.4"
