@@ -123,7 +123,9 @@ export default function loadApp(context, { fetch: fetchModule }) {
 			if (hasLoaded) {
 				// if the query has failed
 				if (query && !window.matchMedia(query).matches) {
-					module()
+					if (typeof module === 'function') {
+						module()
+					}
 					// update the cache
 					cache.set(key, {
 						hasLoaded: false
@@ -177,7 +179,7 @@ export default function loadApp(context, { fetch: fetchModule }) {
 							'you are only allowed to use on behaviour per dom node'
 						)
 					}
-					const key = `${spon}-${index}`
+					const key = `${spon}`
 
 					const item = {
 						key,
@@ -218,7 +220,8 @@ export default function loadApp(context, { fetch: fetchModule }) {
 				}
 				return acc
 			}, [])
-			.forEach((destroy = () => {}) => destroy())
+			.filter(destroy => typeof destroy === 'function')
+			.forEach(destroy => destroy())
 
 		// remove the item from the store
 		killList.forEach(({ key }) => cache.delete(key))

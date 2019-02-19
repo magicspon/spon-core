@@ -1,5 +1,5 @@
 import { init } from '@rematch/core'
-import { connect as bindConnect, registerPlugin } from '../src/'
+import { connectStore } from '../src/'
 
 let store
 
@@ -33,71 +33,16 @@ describe('connect', () => {
 	})
 
 	it('should be a function', () => {
-		expect(bindConnect).toBeInstanceOf(Function)
+		expect(connectStore).toBeInstanceOf(Function)
 	})
 
 	it('should return a function when called with store and registerFunk', () => {
-		const connect = bindConnect(store, registerPlugin)
+		const connect = connectStore(store)
 		expect(connect).toBeInstanceOf(Function)
 	})
 
-	it('should compose modules with store and plugin props', () => {
-		const connect = bindConnect(store, registerPlugin)
-		const node = document.getElementById('test')
-		// get the cart state
-		const mapState = ({ point }) => ({ point })
-		// get all of the point actions
-		const mapDispatch = ({ point }) => ({ ...point })
-		let result = 0
-
-		const mod = ({ a, plugins: { b }, store: { move } }) => {
-			result = a + b
-
-			move({ x: 20 })
-		}
-
-		const plugin = ({ node }) => {
-			node.classList.add('test')
-			return { b: 2 }
-		}
-
-		const merge = connect({
-			store: [mapState, mapDispatch],
-			plugins: [plugin]
-		})(mod)
-
-		expect(merge).toBeInstanceOf(Function)
-
-		merge({ node, a: 10 })
-
-		expect(result).toBe(12)
-		expect(store.getState().point.x).toBe(20)
-		expect(node.classList.contains('test')).toBe(true)
-	})
-
-	it('should compose modules with just plugin props', () => {
-		const connect = bindConnect(store, registerPlugin)
-
-		let result = 0
-
-		const mod = ({ a, plugins: { b } }) => {
-			result = a + b
-		}
-
-		const plugin = () => {
-			return { b: 2 }
-		}
-
-		const merge = connect({
-			plugins: [plugin]
-		})(mod)
-
-		merge({ a: 10 })
-		expect(result).toBe(12)
-	})
-
 	it('should compose modules with just store props', () => {
-		const connect = bindConnect(store, registerPlugin)
+		const connect = connectStore(store)
 		// get the cart state
 		const mapState = ({ point }) => ({ point })
 		// get all of the point actions
@@ -107,9 +52,7 @@ describe('connect', () => {
 			move({ x: 20 })
 		}
 
-		const merge = connect({
-			store: [mapState, mapDispatch]
-		})(mod)
+		const merge = connect({ mapState, mapDispatch })(mod)
 
 		expect(merge).toBeInstanceOf(Function)
 

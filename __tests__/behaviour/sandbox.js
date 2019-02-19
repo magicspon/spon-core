@@ -1,3 +1,3 @@
-export default function example() {
+export default function sandbox() {
 	return () => {}
 }

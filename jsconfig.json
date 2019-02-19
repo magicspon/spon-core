@@ -3,7 +3,7 @@
 		"strictNullChecks": false,
 		"module": "esnext",
 		"target": "ESNEXT",
-		"baseUrl": "./src/js",
+		"baseUrl": "./src",
 		"allowSyntheticDefaultImports": true,
 		"moduleResolution": "node",
 		"paths": {
@@ -13,5 +13,5 @@
 		"noImplicitAny": false
 	},
 	"exclude": ["node_modules"],
-	"include": ["src/js/**/**/*"]
+	"include": ["src/**/**/*"]
 }

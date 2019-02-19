@@ -52,6 +52,7 @@ function domEvents(node = document.body) {
 	function removeEvent(key) {
 		const [event, selector] = key.split(' ')
 		const { func, rootNode, capture } = eventStore.store[key]
+		delete eventStore.store[key]
 
 		rootNode.off(event, selector, func, capture)
 	}

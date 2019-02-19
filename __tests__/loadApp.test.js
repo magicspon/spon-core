@@ -1,11 +1,15 @@
 import { wait } from 'dom-testing-library'
 import { loadApp, cache } from '../src/'
 
+/*
+	<div  data-spon="sandbox"></div>
+
+*/
+
 describe('test loadApp', () => {
 	document.body.innerHTML = `<div id="root">
-															<div data-keep-alive data-spon="sandbox"></div>
-															<div data-spon="sandbox" data-query="(min-width: 1000px)"></div>
 															<div data-spon="sandbox"></div>
+															<div data-spon="responsive" data-query="(min-width: 1000px)"></div>
 														</div>`
 
 	let app
@@ -27,7 +31,7 @@ describe('test loadApp', () => {
 		window.matchMedia = originalMatchMedia
 	})
 
-	beforeAll(() => {
+	beforeAll(async () => {
 		app = loadApp(document.getElementById('root'), {
 			fetch: name => import(`${__dirname}/behaviour/${name}`)
 		})
@@ -60,9 +64,8 @@ describe('test loadApp', () => {
 
 	it('should add any valid data-spon nodes to the cache', async () => {
 		await wait(() => {
-			expect(cache.get('sandbox-0').hasLoaded).toBe(true)
-			expect(cache.get('sandbox-1').hasLoaded).toBe(false)
-			expect(cache.get('sandbox-2').hasLoaded).toBe(true)
+			expect(cache.get('sandbox').hasLoaded).toBe(true)
+			expect(cache.get('responsive').hasLoaded).toBe(false)
 		})
 	})
 
@@ -71,7 +74,7 @@ describe('test loadApp', () => {
 		window.matchMedia = createMockMediaMatcher(true)
 
 		await wait(() => {
-			expect(cache.get('sandbox-1').hasLoaded).toBe(true)
+			expect(cache.get('responsive').hasLoaded).toBe(true)
 		})
 	})
 
@@ -80,16 +83,14 @@ describe('test loadApp', () => {
 		window.matchMedia = createMockMediaMatcher(false)
 
 		await wait(() => {
-			expect(cache.get('sandbox-1').hasLoaded).toBe(false)
+			expect(cache.get('responsive').hasLoaded).toBe(false)
 		})
 	})
 
 	it('should remove modules from the cache when destroy is called', () => {
 		app.destroy()
 
-		expect(cache.has('sandbox-0')).toBe(true)
-		expect(cache.has('sandbox-1')).toBe(false)
-		expect(cache.has('sandbox-2')).toBe(false)
+		expect(cache.has('sandbox')).toBe(false)
 	})
 
 	describe('the use function', () => {

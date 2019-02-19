@@ -11,8 +11,8 @@ import sync from 'framesync'
 function mapStateToRenderHelper(state, watch) {
 	return watch.length > 0
 		? watch.reduce((acc, key) => {
-				acc[key] = state[key]
-				return acc
+			acc[key] = state[key]
+			return acc
 		  }, {})
 		: state
 }
@@ -65,39 +65,27 @@ function bindStoreToRender(state, store) {
  * @namespace connect
  * @function bindConnect
  * @description returns connect function that hooks up any plugins with a bound behaviour
- * @param {object} globalStore the rematch store object
  * @param {function} registerPlugins fn(str) -> fn(fn). used to track which modules are active
  * @return {function}
  */
-export default function bindConnect(globalStore, registerPlugins) {
-	/**
-	 * @function connect
-	 * @memberOf connect
-	 * @inner
-	 * @param {object} STATE either the mapState function or an object with state/dispatch methods
-	 * @param {object} DISPATCH either the mapDispatch function or an object of plugins
-	 * @param {array|undefined} fns any remaining plugins
-	 * @return {function}
-	 */
-	return function connect({ store, plugins = [] }) {
+export default function connect(registerPlugins) {
+	return function(globalStore) {
 		/**
-		 * @param {function} module the module to bind to
+		 * @function connect
 		 * @memberOf connect
+		 * @inner
+		 * @param {object} STATE either the mapState function or an object with state/dispatch methods
+		 * @param {object} DISPATCH either the mapDispatch function or an object of plugins
+		 * @param {array|undefined} fns any remaining plugins
 		 * @return {function}
 		 */
-		return module => {
-			let render
-			let localState
-			let storeItem
-			if (store) {
-				const [state, dispatch] = store
-				localState = state(globalStore.getState())
-				render = bindStoreToRender(localState, globalStore)
+		return function connect({ mapState, mapDispatch }) {
+			const localState = mapState(globalStore.getState())
+			const render = bindStoreToRender(localState, globalStore)
 
-				storeItem = {
-					...localState,
-					...dispatch(globalStore.dispatch)
-				}
+			const storeItem = {
+				...localState,
+				...mapDispatch(globalStore.dispatch)
 			}
 			/**
 			 * @memberOf connect
@@ -107,40 +95,30 @@ export default function bindConnect(globalStore, registerPlugins) {
 			 * @property {object} props.[...props] any other props
 			 * @return {function}
 			 */
-			return ({ key, ...props }) =>
-				/**
-				 * @memberOf connect
-				 * @inner
-				 * @property {object} props the module argument object
-				 * @property {object} props.[...props] any other props
-				 * @property {object} props.render the store render function
-				 * @property {object} props.store the store methods and state props
-				 * @property {object} props.plugins any custom plugins
-				 *
-				 * @return {function}
-				 */
-				module({
-					...props,
-					render: fn => {
-						// add the current modules subscription function
-						// to the function cache used by the core app loader
-						registerPlugins(key)(globalStore.subscribe(render(fn)))
-					},
-					store: { ...storeItem },
-					plugins: {
-						...plugins.reduce(
-							(acc, curr) => ({
-								...acc,
-								...curr({
-									register: registerPlugins(key),
-									globalStore,
-									...props
-								})
-							}),
-							{}
-						)
-					}
-				})
+			return module => {
+				return ({ name, ...props }) => {
+					/**
+					 * @memberOf connect
+					 * @inner
+					 * @property {object} props the module argument object
+					 * @property {object} props.[...props] any other props
+					 * @property {object} props.render the store render function
+					 * @property {object} props.store the store methods and state props
+					 * @property {object} props.plugins any custom plugins
+					 *
+					 * @return {function}
+					 */
+					return module({
+						...props,
+						render: fn => {
+							// add the current modules subscription function
+							// to the function cache used by the core app loader
+							registerPlugins(name)(globalStore.subscribe(render(fn)))
+						},
+						store: { ...storeItem }
+					})
+				}
+			}
 		}
 	}
 }
