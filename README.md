@@ -102,8 +102,7 @@ export default function({ node }) {
 ```
 
 ```javascript
-import { connect } from './store'
-import { withDomEvents } from '@spon/core'
+import { withDomEvents, withPlugins } from '@spon/core'
 
 function example({ node, addEvents }) {
 	node.classList.add('is-hugh-honme')
@@ -116,9 +115,7 @@ function example({ node, addEvents }) {
 	})
 }
 
-export default connect({
-	plugins: [withDomEvents]
-})(example)
+export default withPlugins(withDomEvents)(example)
 ```
 
 `withDomEvents` adds event delegation to the module.
@@ -151,7 +148,7 @@ No… not react… I just like the name, seemed suitable
 
 ```javascript
 import { connect } from './store'
-import { withDomEvents, withRefs } from '@spon/core'
+import { withDomEvents, withRefs, withPlugins } from '@spon/core'
 
 function example({ node, addEvents, refs }) {
 	node.classList.add('is-hugh-honme')
@@ -189,9 +186,7 @@ function example({ node, addEvents, refs }) {
 	})
 }
 
-export default connect({
-	plugins: [withDomEvents, withRefs]
-})(example)
+export default withPlugins(withDomEvents, withRefs)(example)
 ```
 
 ## Rematch (redux)
@@ -203,7 +198,7 @@ store/index.js
 ```javascript
 import { init } from '@rematch/core'
 import createRematchPersist from '@rematch/persist'
-import { connect as bindConnect, registerPlugin } from '@spon/core'
+import { connectStore } from '@/core'
 import * as models from './models/index'
 
 const persistPlugin = createRematchPersist({
@@ -219,7 +214,7 @@ const store = init({
 	plugins: [persistPlugin]
 })
 
-export const connect = bindConnect(store, registerPlugin)
+export const connect = connectStore(store)
 
 export default store
 ```
@@ -228,7 +223,7 @@ Standard rematch code…. Back to our module.
 
 ```javascript
 import { connect } from './store'
-import { withDomEvents, withRefs } from '@spon/core'
+import { withDomEvents, withRefs, withPlugins } from '@spon/core'
 
 // removed other code for brevity
 function example({ node, addEvents, refs, store, render }) {
@@ -254,10 +249,12 @@ const mapState = store => {
 // note: I could have written the function above like this
 const mapDispatch = ({ cart }) => ({ ...cart })
 
-export default connect({
-	store: [mapState, mapDispatch],
-	plugins: [withDomEvents, withRefs]
-})(Cart)
+export default withPlugins(withRefs, withDomEvents)(
+	connect({
+		mapState,
+		mapDispatch
+	})(basket)
+)
 ```
 
 So… we could make a little basket app
@@ -326,10 +323,12 @@ const mapState = ({ cart }) => ({ cart })
 const mapDispatch = ({ cart }) => ({ ...cart })
 // export the component wrapped with store values
 // and any custom plugins
-export default connect({
-	store: [mapState, mapDispatch],
-	plugins: [withDomEvents, withRefs]
-})(basket)
+export default withPlugins(withRefs, withDomEvents)(
+	connect({
+		mapState,
+		mapDispatch
+	})(basket)
+)
 ```
 
 ## Router
