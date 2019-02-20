@@ -33,7 +33,7 @@ export const registerPlugin = registerPlugins(cache)
  * @param {object} config deconstructed object
  * @param {function} config.module the module to load
  * @param {HTMLElement} config.node the html element to bind the module to
- * @param {string} config.name the data-spon value
+ * @param {string} config.name the data-behaviour value
  * @param {boolean} config.keepAlive should the module be destroyed between page transitions
  * @param {string} config.key a unique key, used as a cache reference
  * @return {void}
@@ -170,14 +170,14 @@ export default function loadApp(context, { fetch: fetchModule }) {
 	 * @return {Array}
 	 */
 	function getNodes(node) {
-		return [...node.querySelectorAll('*[data-spon]')]
+		return [...node.querySelectorAll('*[data-behaviour]')]
 	}
 
 	/**
 	 * @method hydrate
 	 * @memberof loadApp
 	 * @inner
-	 * @description queries the given context for elements with data-spon attributes
+	 * @description queries the given context for elements with data-behaviour attributes
 	 * any matches are added to the cache.
 	 * the scan function is then called, as well as a window resize event is added
 	 * which also calls the scan function
@@ -187,21 +187,21 @@ export default function loadApp(context, { fetch: fetchModule }) {
 	function hydrate(context) {
 		sync.read(() => {
 			getNodes(context)
-				.filter(({ dataset: { keepAlive, spon } }) => {
-					return keepAlive === 'true' || !cache.has(spon)
+				.filter(({ dataset: { keepAlive, behaviour } }) => {
+					return keepAlive === 'true' || !cache.has(behaviour)
 				})
 				.forEach(node => {
-					const { spon, query, keepAlive, ...rest } = node.dataset
-					if (spon.split(' ').length > 1) {
+					const { behaviour, query, keepAlive, ...rest } = node.dataset
+					if (behaviour.split(' ').length > 1) {
 						throw new TypeError(
 							'you are only allowed to use on behaviour per dom node'
 						)
 					}
-					const key = `${spon}`
+					const key = `${behaviour}`
 
 					const item = {
 						key,
-						name: spon,
+						name: behaviour,
 						node,
 						data: rest,
 						hasLoaded: false

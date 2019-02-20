@@ -10,7 +10,7 @@ Source: [spon-ui/src/js at master · magicspon/spon-ui · GitHub](https://github
 
 # spon.js
 
-spon.js is a light weight framework for loading javascript modules on traditional server rendered websites. It provides fluid page transitions, a delegated event system and a simple plugin system for extending behaviours. At its root, spon.js takes a DOM node with a `data-spon="example"` attribute, and loads a corresponding javascript module. All modules are single chunks that are asynchronous loaded.
+spon.js is a light weight framework for loading javascript modules on traditional server rendered websites. It provides fluid page transitions, a delegated event system and a simple plugin system for extending behaviours. At its root, spon.js takes a DOM node with a `data-behaviour="example"` attribute, and loads a corresponding javascript module. All modules are single chunks that are asynchronous loaded.
 
 ## Install
 
@@ -38,7 +38,7 @@ export {
 Write some html.
 
 ```html
-<div data-spon="example">hello</div>
+<div data-behaviour="example">hello</div>
 ```
 
 Import `loadApp` into your main javascript file
@@ -91,7 +91,7 @@ export default function({ node }) {
 ## Dom Events
 
 ```html
-<div data-spon="example">
+<div data-behaviour="example">
 	<button type="button" data-toggle-button>Toggle</button>
 </div>
 ```
@@ -133,7 +133,7 @@ addEvents(document.body, {
 No… not react… I just like the name, seemed suitable
 
 ```html
-<div data-spon="example">
+<div data-behaviour="example">
 	<button type="button" data-toggle-button>Toggle</button>
 	<!-- add a couple of nodes with unique data-ref props -->
 	<p class="item" data-ref="product" data-id="10">Woffles</p>
