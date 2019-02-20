@@ -1,8 +1,22 @@
 // @ts-check
 import sync from 'framesync'
-import throttle from 'raf-throttle'
 import { createStore, registerPlugins } from '../utils'
 import eventBus from '../modules/eventBus'
+
+function debounce(func, wait, immediate) {
+	let timeout
+	return function(...args) {
+		const context = this
+		const later = function() {
+			timeout = null
+			if (!immediate) func.apply(context, args)
+		}
+		const callNow = immediate && !timeout
+		clearTimeout(timeout)
+		timeout = setTimeout(later, wait)
+		if (callNow) func.apply(context, args)
+	}
+}
 
 // create a cache object
 // this is used to store any active modules
@@ -123,6 +137,10 @@ export default function loadApp(context, { fetch: fetchModule }) {
 			if (hasLoaded) {
 				// if the query has failed
 				if (query && !window.matchMedia(query).matches) {
+					cache.get(key).plugins.forEach(fn => {
+						fn()
+					})
+
 					if (typeof module === 'function') {
 						module()
 					}
@@ -172,7 +190,7 @@ export default function loadApp(context, { fetch: fetchModule }) {
 				.filter(({ dataset: { keepAlive, spon } }) => {
 					return keepAlive === 'true' || !cache.has(spon)
 				})
-				.forEach((node, index) => {
+				.forEach(node => {
 					const { spon, query, keepAlive, ...rest } = node.dataset
 					if (spon.split(' ').length > 1) {
 						throw new TypeError(
@@ -194,7 +212,7 @@ export default function loadApp(context, { fetch: fetchModule }) {
 				})
 
 			scan()
-			handle = throttle(scan)
+			handle = debounce(scan, 100)
 			window.addEventListener('resize', handle)
 		})
 	}

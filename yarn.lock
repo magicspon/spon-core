@@ -669,6 +669,13 @@
   resolved "https://registry.yarnpkg.com/@sheerun/mutationobserver-shim/-/mutationobserver-shim-0.3.2.tgz#8013f2af54a2b7d735f71560ff360d3a8176a87b"
   integrity sha512-vTCdPp/T/Q3oSqwHmZ5Kpa9oI7iLtGl3RQaA/NyLHikvcrPxACkkKVr/XzkSPJWXHRhKGzVvb0urJsbMlRxi1Q==
 
+"@spon/domevents@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@spon/domevents/-/domevents-0.0.3.tgz#ab205b2985fc2818cc3965af21f09ebcd767012d"
+  integrity sha512-KHSkymH0/Xv6aZa9DYGXImK6ltLNeKD0biN7dlgva9rt6LVRzOCi8j1AfdbqEqEQ9fnoU60Tn5h2OUPNLB8AHw==
+  dependencies:
+    dom-delegate "^2.2.0"
+
 "@types/estree@0.0.38":
   version "0.0.38"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.38.tgz#c1be40aa933723c608820a99a373a16d215a1ca2"
