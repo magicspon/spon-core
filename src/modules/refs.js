@@ -9,20 +9,13 @@ import styler from 'stylefire'
  * @return {Promise}
  */
 function addEventPromise(event, element, callback) {
-	let complete = false
-
-	const done = (resolve, e) => {
-		e.stopPropagation()
-		element.removeEventListener(event, done)
-		if (e.target === element && !complete) {
-			complete = true
+	return new Promise(resolve => {
+		function done() {
+			element.removeEventListener(event, done)
 			resolve()
 		}
-	}
-
-	return new Promise(resolve => {
-		if (callback) callback()
-		element.addEventListener(event, done.bind(null, resolve))
+		element.addEventListener(event, done)
+		callback()
 	})
 }
 
