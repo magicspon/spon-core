@@ -2,14 +2,14 @@ import { wait } from 'dom-testing-library'
 import { loadApp, cache } from '../src/'
 
 /*
-	<div  data-spon="sandbox"></div>
+	<div  data-behaviour="sandbox"></div>
 
 */
 
 describe('test loadApp', () => {
 	document.body.innerHTML = `<div id="root">
-															<div data-spon="sandbox"></div>
-															<div data-spon="responsive" data-query="(min-width: 1000px)"></div>
+															<div data-behaviour="sandbox"></div>
+															<div data-behaviour="responsive" data-query="(min-width: 1000px)"></div>
 														</div>`
 
 	let app
@@ -62,7 +62,7 @@ describe('test loadApp', () => {
 		expect(app.emit).toBeInstanceOf(Function)
 	})
 
-	it('should add any valid data-spon nodes to the cache', async () => {
+	it('should add any valid data-behaviour nodes to the cache', async () => {
 		await wait(() => {
 			expect(cache.get('sandbox').hasLoaded).toBe(true)
 			expect(cache.get('responsive').hasLoaded).toBe(false)
