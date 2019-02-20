@@ -64,8 +64,8 @@ describe('test loadApp', () => {
 
 	it('should add any valid data-behaviour nodes to the cache', async () => {
 		await wait(() => {
-			expect(cache.get('sandbox').hasLoaded).toBe(true)
-			expect(cache.get('responsive').hasLoaded).toBe(false)
+			expect(cache.get('sandbox-0').hasLoaded).toBe(true)
+			expect(cache.get('responsive-1').hasLoaded).toBe(false)
 		})
 	})
 
@@ -74,7 +74,7 @@ describe('test loadApp', () => {
 		window.matchMedia = createMockMediaMatcher(true)
 
 		await wait(() => {
-			expect(cache.get('responsive').hasLoaded).toBe(true)
+			expect(cache.get('responsive-1').hasLoaded).toBe(true)
 		})
 	})
 
@@ -83,14 +83,14 @@ describe('test loadApp', () => {
 		window.matchMedia = createMockMediaMatcher(false)
 
 		await wait(() => {
-			expect(cache.get('responsive').hasLoaded).toBe(false)
+			expect(cache.get('responsive-1').hasLoaded).toBe(false)
 		})
 	})
 
 	it('should remove modules from the cache when destroy is called', () => {
 		app.destroy()
 
-		expect(cache.has('sandbox')).toBe(false)
+		expect(cache.has('sandbox-0')).toBe(false)
 	})
 
 	describe('the use function', () => {

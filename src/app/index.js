@@ -157,7 +157,7 @@ export default function loadApp(context, { fetch: fetchModule }) {
 				// fetch the behaviour
 				const resp = await fetchModule(name)
 				const { default: module } = resp
-				loadModule({ module, node, name, keepAlive, key })
+				loadModule({ module, node, name: key, keepAlive, key })
 			}
 		})
 	}
@@ -190,14 +190,14 @@ export default function loadApp(context, { fetch: fetchModule }) {
 				.filter(({ dataset: { keepAlive, behaviour } }) => {
 					return keepAlive === 'true' || !cache.has(behaviour)
 				})
-				.forEach(node => {
+				.forEach((node, index) => {
 					const { behaviour, query, keepAlive, ...rest } = node.dataset
 					if (behaviour.split(' ').length > 1) {
 						throw new TypeError(
 							'you are only allowed to use on behaviour per dom node'
 						)
 					}
-					const key = `${behaviour}`
+					const key = `${behaviour}-${index}`
 
 					const item = {
 						key,
