@@ -197,7 +197,7 @@ export default function loadApp(context, { fetch: fetchModule }) {
 							'you are only allowed to use on behaviour per dom node'
 						)
 					}
-					const key = `${behaviour}-${index}`
+					const key = cache.has(behaviour) ? `${behaviour}-${index}` : `${behaviour}`
 
 					const item = {
 						key,
