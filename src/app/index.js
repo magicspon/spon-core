@@ -191,13 +191,22 @@ export default function loadApp(context, { fetch: fetchModule }) {
 					return keepAlive === 'true' || !cache.has(behaviour)
 				})
 				.forEach((node, index) => {
+					const { id } = node
 					const { behaviour, query, keepAlive, ...rest } = node.dataset
 					if (behaviour.split(' ').length > 1) {
 						throw new TypeError(
 							'you are only allowed to use on behaviour per dom node'
 						)
 					}
-					const key = cache.has(behaviour) ? `${behaviour}-${index}` : `${behaviour}`
+
+					if (!id) {
+						// eslint-disable-next-line
+						console.warn(
+							`${behaviour} is missing an id, behaviour name has been used instead`
+						)
+					}
+
+					const key = id || `${behaviour}-${index}`
 
 					const item = {
 						key,
