@@ -59,6 +59,7 @@ function createDataRefs(node) {
 				 */
 				set(value) {
 					node.dataset[key] = value
+					node.setAttribute(`data-${key}`, value)
 				},
 				/**
 				 * @method get
