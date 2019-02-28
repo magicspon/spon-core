@@ -18,12 +18,22 @@ function debounce(func, wait, immediate) {
 	}
 }
 
-// create a cache object
-// this is used to store any active modules
+/**
+ * create a cache object
+ * this is used to store any active modules
+ *
+ * @public
+ * @type {Object}
+ */
 export const cache = createStore()
 
-// return a registerPlugin function, this is used to
-// add plugins to the cache
+/**
+ * return a registerPlugin function, this is used to
+ * add plugins to the cache
+ *
+ * @public
+ * @type {Object}
+ */
 export const registerPlugin = registerPlugins(cache)
 
 /**
@@ -39,11 +49,21 @@ export const registerPlugin = registerPlugins(cache)
  * @return {void}
  */
 function loadModule({ module, node, name, keepAlive, key }) {
-	// bind the regsiter plugin function to the current key
+	/**
+	 * bind the regsiter plugin function to the current key
+	 *
+	 * @private
+	 * @type {Object}
+	 */
 	const register = registerPlugin(key)
 
-	// call the function, returning the result to destroyModule
-	// this function will be called when the module is destroyed
+	/**
+	 * call the function, returning the result to destroyModule
+	 * this function will be called when the module is destroyed
+	 *
+	 * @private
+	 * @type {Object}
+	 */
 	const destroyModule = module({
 		node,
 		name,
@@ -119,6 +139,13 @@ function use(plugins) {
  */
 export default function loadApp(context, { fetch: fetchModule }) {
 	let handle
+
+	/**
+	 * The plugins store
+	 *
+	 * @private
+	 * @type {Object}
+	 */
 	const plugins = {}
 
 	/**
@@ -129,6 +156,12 @@ export default function loadApp(context, { fetch: fetchModule }) {
 	 * @return {void}
 	 */
 	function scan() {
+		/**
+		 * The current list to scan
+		 *
+		 * @private
+		 * @type {Object}
+		 */
 		const list = cache.store
 
 		Object.entries(list).forEach(async ([key, item]) => {

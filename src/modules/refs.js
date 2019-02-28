@@ -8,7 +8,7 @@ import styler from 'stylefire'
  * @param {function} callback
  * @return {Promise}
  */
-function addEventPromise(event, element, callback) {
+export function addEventPromise(event, element, callback) {
 	return new Promise(resolve => {
 		function done() {
 			element.removeEventListener(event, done)
