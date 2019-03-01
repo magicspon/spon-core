@@ -5,9 +5,9 @@ import eventBus from '../modules/eventBus'
 
 function debounce(func, wait, immediate) {
 	let timeout
-	return function (...args) {
+	return function(...args) {
 		const context = this
-		const later = function () {
+		const later = function() {
 			timeout = null
 			if (!immediate) func.apply(context, args)
 		}
@@ -165,14 +165,22 @@ export default function loadApp(context, { fetch: fetchModule }) {
 		const list = cache.store
 
 		Object.entries(list).forEach(async ([key, item]) => {
-			const { query, name, node, hasLoaded, keepAlive } = item
+			const { query, name, node, hasLoaded, module, keepAlive } = item
 			// if the module has loaded
 			if (hasLoaded) {
 				// if the query has failed
 				if (query && !window.matchMedia(query).matches) {
-					cache.get(key).plugins.forEach(fn => {
-						fn()
-					})
+					const { plugins } = cache.get(key)
+					if (plugins && plugins.length) {
+						plugins.forEach(fn => {
+							fn()
+						})
+					} else {
+						if (typeof module === 'function') {
+							module()
+						}
+					}
+
 					// update the cache
 					cache.set(key, {
 						hasLoaded: false
