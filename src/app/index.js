@@ -49,6 +49,14 @@ export const registerPlugin = registerPlugins(cache)
  * @return {void}
  */
 function loadModule({ module, node, name, keepAlive, key }) {
+	// if the cache already contains some plugins
+	// remove them all
+	if (cache.get(key).plugins) {
+		cache.set(key, {
+			plugins: []
+		})
+	}
+
 	/**
 	 * bind the regsiter plugin function to the current key
 	 *
@@ -166,6 +174,7 @@ export default function loadApp(context, { fetch: fetchModule }) {
 
 		Object.entries(list).forEach(async ([key, item]) => {
 			const { query, name, node, hasLoaded, module, keepAlive } = item
+
 			// if the module has loaded
 			if (hasLoaded) {
 				// if the query has failed
