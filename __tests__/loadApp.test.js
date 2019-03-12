@@ -1,6 +1,7 @@
 import { wait } from 'dom-testing-library'
 import { loadApp, cache } from '../src/'
-
+import sandbox from './behaviour/sandbox'
+import responsive from './behaviour/responsive'
 /*
 	<div  data-behaviour="sandbox"></div>
 
@@ -10,6 +11,8 @@ describe('test loadApp', () => {
 	document.body.innerHTML = `<div id="root">
 															<div id="a" data-behaviour="sandbox"></div>
 															<div id="b" data-behaviour="responsive" data-query="(min-width: 1000px)"></div>
+															<div id="c"></div>
+															<div id="d"></div>
 														</div>`
 
 	let app
@@ -85,6 +88,24 @@ describe('test loadApp', () => {
 		await wait(() => {
 			expect(cache.get('b').hasLoaded).toBe(false)
 		})
+	})
+
+	it('should load single modules when called loadModule method is called', () => {
+		app.loadModules([
+			{
+				module: sandbox,
+				node: document.getElementById('c'),
+				key: 'c'
+			},
+			{
+				module: responsive,
+				node: document.getElementById('d'),
+				key: 'd'
+			}
+		])
+
+		expect(cache.has('c')).toBe(true)
+		expect(cache.has('d')).toBe(true)
 	})
 
 	it('should remove modules from the cache when destroy is called', () => {

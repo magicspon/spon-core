@@ -14,6 +14,7 @@ export function addEventPromise(event, element, callback) {
 			element.removeEventListener(event, done)
 			resolve()
 		}
+
 		element.addEventListener(event, done)
 		callback()
 	})

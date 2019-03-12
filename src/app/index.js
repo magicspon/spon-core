@@ -43,15 +43,14 @@ export const registerPlugin = registerPlugins(cache)
  * @param {object} config deconstructed object
  * @param {function} config.module the module to load
  * @param {HTMLElement} config.node the html element to bind the module to
- * @param {string} config.name the data-behaviour value
  * @param {boolean} config.keepAlive should the module be destroyed between page transitions
  * @param {string} config.key a unique key, used as a cache reference
  * @return {void}
  */
-function loadModule({ module, node, name, keepAlive, key }) {
+function loadModule({ module, node, keepAlive, key }) {
 	// if the cache already contains some plugins
-	// remove them all
-	if (cache.get(key).plugins) {
+	// remove them all, they have been destroyed
+	if (cache.get(key) && cache.get(key).plugins) {
 		cache.set(key, {
 			plugins: []
 		})
@@ -74,8 +73,7 @@ function loadModule({ module, node, name, keepAlive, key }) {
 	 */
 	const destroyModule = module({
 		node,
-		name,
-		key
+		name: key
 	})
 
 	// set the cache props
@@ -203,7 +201,7 @@ export default function loadApp(context, { fetch: fetchModule }) {
 				// fetch the behaviour
 				const resp = await fetchModule(name)
 				const { default: module } = resp
-				loadModule({ module, node, name: key, keepAlive, key })
+				loadModule({ module, node, keepAlive, key })
 			}
 		})
 	}
@@ -308,6 +306,11 @@ export default function loadApp(context, { fetch: fetchModule }) {
 		destroy,
 		...eventBus,
 		use: use(plugins),
+		loadModules: fns => {
+			fns.forEach(fn => {
+				loadModule(fn)
+			})
+		},
 		get plugins() {
 			return plugins
 		}
