@@ -110,6 +110,7 @@ export default function connect(registerPlugins) {
 					 */
 					return module({
 						...props,
+						name,
 						render: fn => {
 							// add the current modules subscription function
 							// to the function cache used by the core app loader

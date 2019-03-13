@@ -15,15 +15,16 @@ export default function bindPlugins(registerPlugins) {
 		 * @return {function}
 		 */
 		return module => {
-			return ({ key, ...props }) =>
+			return ({ name, ...props }) =>
 				module({
 					...props,
+					name,
 					plugins: {
 						...plugins.reduce(
 							(acc, curr) => ({
 								...acc,
 								...curr({
-									register: registerPlugins(key),
+									register: registerPlugins(name),
 									...props
 								})
 							}),

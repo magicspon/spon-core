@@ -94,11 +94,15 @@ export function registerPlugins(cache) {
 		 */
 		//	debugger // eslint-disable-line
 		function setPlugin(plugin) {
-			const { plugins = [] } = cache.get(name)
+			try {
+				const { plugins = [] } = cache.get(name)
 
-			cache.set(name, {
-				plugins: [...plugins, plugin]
-			})
+				cache.set(name, {
+					plugins: [...plugins, plugin]
+				})
+			} catch {
+				console.log(name)
+			}
 		}
 		return setPlugin
 	}
