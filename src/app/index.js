@@ -231,8 +231,9 @@ export default function loadApp(context, { fetch: fetchModule }) {
 	function hydrate(context) {
 		sync.read(() => {
 			getNodes(context)
-				.filter(({ dataset: { keepAlive, behaviour } }) => {
-					return keepAlive === 'true' || !cache.has(behaviour)
+				.filter(({ id, dataset: { keepAlive, behaviour } }, index) => {
+					const key = id || `${behaviour}-${index}`
+					return keepAlive === 'true' || !cache.has(key)
 				})
 				.forEach((node, index) => {
 					const { id } = node
