@@ -1,9 +1,3 @@
-Work in progress
-
-This has not been used in production...
-
-There are some tests, could do with more.
-
 Demo: [spon.ui](https://sponjs.netlify.com/components/preview/sandbox)
 
 Source: [spon-ui/src/js at master · magicspon/spon-ui · GitHub](https://github.com/magicspon/spon-ui/tree/master/src/js)
@@ -23,14 +17,7 @@ or
 all the things!
 
 ```javascript
-export {
-	loadApp,
-	connect,
-	refs,
-	withRefs,
-	createNode,
-	eventBus
-} from '@spon/core'
+export { loadApp, eventBus } from '@spon/core'
 ```
 
 ## Getting Started
@@ -38,7 +25,7 @@ export {
 Write some html.
 
 ```html
-<div data-behaviour="example">hello</div>
+<div id="example-1" data-behaviour="example">hello</div>
 ```
 
 Import `loadApp` into your main javascript file
@@ -97,7 +84,8 @@ export default function({ node }) {
 ```
 
 ```javascript
-import { withDomEvents, withPlugins } from '@spon/core'
+import { withPlugins } from '@spon/core'
+import { withDomEvents } from '../plugins/withDomEvents'
 
 function example({ node, addEvents }) {
 	node.classList.add('is-hugh-honme')
@@ -142,8 +130,8 @@ No… not react… I just like the name, seemed suitable
 ```
 
 ```javascript
-import { connect } from './store'
-import { withDomEvents, withRefs, withPlugins } from '@spon/core'
+import { withRefs, withPlugins, connect } from '@spon/core'
+import { withDomEvents } from '../plugins/withDomEvents'
 
 function example({ node, addEvents, refs }) {
 	node.classList.add('is-hugh-honme')
@@ -218,7 +206,8 @@ Standard rematch code…. Back to our module.
 
 ```javascript
 import { connect } from './store'
-import { withDomEvents, withRefs, withPlugins } from '@spon/core'
+import { withRefs, withPlugins, connect } from '@spon/core'
+import { withDomEvents } from '../plugins/withDomEvents'
 
 // removed other code for brevity
 function example({ node, addEvents, refs, store, render }) {
@@ -260,8 +249,8 @@ In this example I’m using `lit-html` to handle dom updates.
 
 ```javascript
 import { render as h, html } from 'lit-html'
-import { withRefs, withDomEvents } from '@spon/core'
-import { connect } from './store'
+import { withRefs, withPlugins, connect } from '@spon/core'
+import { withDomEvents } from '../plugins/withDomEvents'
 
 function basket(props) {
 	const {
