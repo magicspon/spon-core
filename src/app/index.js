@@ -133,6 +133,7 @@ function use(plugins) {
  * @property {function} on the mitt on method
  * @property {function} off the mitt off method
  * @property {function} emit the mitt emit method
+ * @property {function} loadModules
  * @property {Use} use the use function
  * @property {object} plugins the plugins object
  */

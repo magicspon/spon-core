@@ -95,13 +95,25 @@ export function registerPlugins(cache) {
 		//	debugger // eslint-disable-line
 		function setPlugin(plugin) {
 			try {
-				const { plugins = [] } = cache.get(name)
+				const item = cache.get(name)
 
-				cache.set(name, {
-					plugins: [...plugins, plugin]
-				})
+				if (item) {
+					const { plugins = [] } = cache.get(name)
+					cache.set(name, {
+						plugins: [...plugins, plugin]
+					})
+				} else {
+					cache.set(name, {
+						plugins: [plugin]
+					})
+				}
 			} catch {
-				console.log(name)
+				// eslint-disable-next-line
+				console.log(
+					'failed to register plugin:',
+					name,
+					'in utils/index.js, registerPlugins function'
+				)
 			}
 		}
 		return setPlugin
