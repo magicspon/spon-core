@@ -171,7 +171,7 @@ export default function loadApp(context, { fetch: fetchModule }) {
 		 */
 		const list = cache.store
 
-		Object.entries(list).forEach(async ([key, item]) => {
+		Object.entries(list).forEach(([key, item]) => {
 			const { query, name, node, hasLoaded, module, keepAlive } = item
 
 			// if the module has loaded
@@ -200,9 +200,14 @@ export default function loadApp(context, { fetch: fetchModule }) {
 			if (window.matchMedia(query).matches || typeof query === 'undefined') {
 				if (cache.get(key) && cache.get(key).hasLoaded) return
 				// fetch the behaviour
-				const resp = await fetchModule(name)
-				const { default: module } = resp
-				loadModule({ module, node, keepAlive, key })
+				fetchModule(name)
+					.then(resp => {
+						const { default: module } = resp
+						loadModule({ module, node, keepAlive, key })
+					})
+					.catch(err => {
+						console.log(`error loading ${name}`, err)
+					})
 			}
 		})
 	}
