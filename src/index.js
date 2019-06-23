@@ -1,11 +1,10 @@
-export { default as eventBus } from './modules/eventBus'
-export { default as loadApp, cache } from './app'
+export { default as loadApp, registerPlugin, eventBus, cache } from './app'
 
-import { registerPlugin } from './app'
-import bindPlugins from './modules/withPlugins'
+// import { registerPlugin } from './app'
+// import bindPlugins from './modules/withPlugins'
 
-export const withPlugins = bindPlugins(registerPlugin)
+// export const withPlugins = bindPlugins(registerPlugin)
 
-import connect from './modules/connect'
+// import connect from './modules/connect'
 
-export const connectStore = connect(registerPlugin)
+// export const connectStore = connect(registerPlugin)

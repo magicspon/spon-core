@@ -1,27 +1,14 @@
 // @ts-check
-import { createStore, registerPlugins } from '../utils'
-import eventBus from '../modules/eventBus'
+import {
+	createStore,
+	registerPlugins,
+	renderInTheLoop,
+	debounce
+} from '../utils'
+import mitt from 'mitt'
 
-function renderInTheLoop(callback) {
-	requestAnimationFrame(() => {
-		requestAnimationFrame(() => callback())
-	})
-}
-
-function debounce(func, wait, immediate) {
-	let timeout
-	return function(...args) {
-		const context = this
-		const later = function() {
-			timeout = null
-			if (!immediate) func.apply(context, args)
-		}
-		const callNow = immediate && !timeout
-		clearTimeout(timeout)
-		timeout = setTimeout(later, wait)
-		if (callNow) func.apply(context, args)
-	}
-}
+// @ts-ignore
+export const eventBus = mitt()
 
 /**
  * create a cache object
