@@ -1,10 +1,4 @@
 export { default as eventBus } from './modules/eventBus'
-export {
-	default as refs,
-	withRefs,
-	createNode,
-	addEventPromise
-} from './modules/refs'
 export { default as loadApp, cache } from './app'
 
 import { registerPlugin } from './app'

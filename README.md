@@ -214,7 +214,7 @@ import { connect } from '@/store'
 import { withDomEvents } from '@/plugins/withDomEvents'
 
 // removed other code for brevity
-function example({ node, addEvents, refs, store, render }) {
+function example({ node, addEvents, store, render }) {
 	// this function will be called every time
 	// the objects returned from the mapState
 	// function change

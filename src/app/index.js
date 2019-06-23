@@ -1,7 +1,12 @@
 // @ts-check
-import sync from 'framesync'
 import { createStore, registerPlugins } from '../utils'
 import eventBus from '../modules/eventBus'
+
+function renderInTheLoop(callback) {
+	requestAnimationFrame(() => {
+		requestAnimationFrame(() => callback())
+	})
+}
 
 function debounce(func, wait, immediate) {
 	let timeout
@@ -235,7 +240,7 @@ export default function loadApp(context, { fetch: fetchModule }) {
 	 * @return {void}
 	 */
 	function hydrate(context) {
-		sync.read(() => {
+		renderInTheLoop(() => {
 			getNodes(context)
 				.filter(({ id, dataset: { keepAlive, behaviour } }, index) => {
 					const key = id || `${behaviour}-${index}`
