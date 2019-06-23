@@ -1,5 +1,9 @@
 ## @spon/core
 
+## Installation
+
+`npm install @spon/core` or `yarn add @spon/core`
+
 `@spon/core` is a little framework used to asynchronous load javascript modules based on dom attributes.
 
 ## Getting started
