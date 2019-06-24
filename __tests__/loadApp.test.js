@@ -113,32 +113,4 @@ describe('test loadApp', () => {
 
 		expect(cache.has('a')).toBe(false)
 	})
-
-	describe('the use function', () => {
-		it('should be a function', () => {
-			expect(app.use).toBeInstanceOf(Function)
-		})
-
-		it('should add plugins to the app', () => {
-			app.use('fn', () => {})
-			expect(app.plugins).toBeInstanceOf(Object)
-			expect(Object.keys(app.plugins)[0]).toBe('fn')
-		})
-
-		it('plugins should recieve some props', () => {
-			app.use('fn', props => {
-				expect(props.eventBus).toBeInstanceOf(Object)
-			})
-		})
-
-		it('recieve any props passed from the third argument', () => {
-			app.use(
-				'fn',
-				props => {
-					expect(props.hello).toBe(2000)
-				},
-				{ hello: 2000 }
-			)
-		})
-	})
 })
