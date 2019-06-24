@@ -12,9 +12,17 @@ Add the following code to your main javascript entry point (app.js)
 
 ```javascript
 import { loadApp } from '@spon/core'
+import logger from '@/behaviours/logger'
 
-loadApp(document.body, {
-	fetch: name => import(`@/behaviours/${name}`)
+// load from data-behaviours
+loadApp(name => import(`@/behaviours/${name}`), document.body)
+
+// load from file
+loadModule({
+	module: logger, // required
+	id: 'hello', // required
+	node: document.getElementById('logger') // default undefined,
+	keepAlive: true // default undefined
 })
 ```
 
