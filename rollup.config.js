@@ -1,9 +1,9 @@
-// import babel from 'rollup-plugin-babel'
+import babel from 'rollup-plugin-babel'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import filesize from 'rollup-plugin-filesize'
 import { terser } from 'rollup-plugin-terser'
-// import minify from 'rollup-plugin-babel-minify'
+import minify from 'rollup-plugin-babel-minify'
 
 const config = {
 	input: 'src/index.js',
@@ -24,21 +24,21 @@ const config = {
 		}
 	],
 	plugins: [
-		// babel({
-		// 	exclude: 'node_modules/**',
-		// 	runtimeHelpers: false,
-		// 	presets: [
-		// 		[
-		// 			'@babel/preset-env',
-		// 			{
-		// 				modules: false
-		// 			}
-		// 		]
-		// 	]
-		// }),
+		babel({
+			exclude: 'node_modules/**',
+			runtimeHelpers: false,
+			presets: [
+				[
+					'@babel/preset-env',
+					{
+						modules: false
+					}
+				]
+			]
+		}),
 		resolve(),
 		commonjs(),
-		// minify(),
+		minify(),
 		terser(),
 		filesize()
 	]
