@@ -79,35 +79,3 @@ export default example
 ```
 
 Behaviours with the 'data-keep-alive' attribute will not be destroyed when navigating betweeen pages. This is only valid if you are using ajax pagaination.
-
-## Events
-
-`@spon/core` comes with a global event emitter (it uses mitt internally)
-
-```javascript
-import { eventBus } from '@spon/core'
-
-/**
- * @function example
- * @param {Object} props
- * @property {HTMLElement} props.node
- * @return {Function} a function to unmount
- */
-function example({ node }) {
-	const slide = new SomeSlideLibrary(node)
-
-	eventBus.on('some:event', (...args) => {
-		console.log(args)
-	})
-
-	return () => {
-		slide.destroy()
-
-		eventBus.off('some:event')
-	}
-}
-
-export default example
-```
-
-see [here](https://github.com/developit/mitt) for more documentation.
