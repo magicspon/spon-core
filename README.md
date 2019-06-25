@@ -87,3 +87,55 @@ export default example
 ```
 
 Behaviours with the 'data-keep-alive' attribute will not be destroyed when navigating betweeen pages. This is only valid if you are using ajax pagaination.
+
+## Usage with @spon/plugins and/or @spon/connect
+
+Example:
+
+```javascript
+import { connect } from '@/store'
+import { domEvents, withPlugins } from '@spon/plugins'
+
+/* eslint-disable no-console */
+function counter({ node, name, plugins: { addEvents }, store, render }) {
+	addEvents({
+		'click button': () => {
+			store.increment(1)
+		}
+	})
+
+	render(
+		({ current }) => {
+			node.textContent = current.count
+		},
+		['count']
+	)
+
+	return () => {
+		console.log(`destroy: ${name}`)
+	}
+}
+
+const mapState = store => {
+	return {
+		count: store.count
+	}
+}
+const mapDispatch = ({ count }) => ({ ...count })
+
+export default withPlugins(domEvents)(
+	connect({ mapState, mapDispatch })(counter)
+)
+```
+
+### Just plugins
+
+```javascript
+export default withPlugins(domEvents)(counter)
+```
+
+### Just connect
+
+```javascript
+export default connect(domEvents)(counter)
+```
