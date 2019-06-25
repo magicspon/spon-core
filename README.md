@@ -3,6 +3,7 @@
 ## Using version 1.x
 
 There are breaking changes between 2x and 1x. Please see the v1 branch for v1 docs.
+
 2x has a smaller scope than 1x. `withPlugins` and `eventBus` has been moved to `@spon/plugins` and
 `connect` has been moved to `@spon/connect`. Refs, createNode, and addEventPromise have been removed
 from version 2x
