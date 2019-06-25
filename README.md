@@ -1,5 +1,9 @@
 ## @spon/core
 
+## Using version 1.x
+
+There are breaking changes between 2x and 1x. Please see the v1 branch for v1 docs.
+
 ## Installation
 
 `npm install @spon/core` or `yarn add @spon/core`
@@ -11,11 +15,11 @@
 Add the following code to your main javascript entry point (app.js)
 
 ```javascript
-import { loadApp } from '@spon/core'
-import logger from '@/behaviours/logger'
+import { loadApp, loadModule } from '@spon/core'
+import logger from './behaviours/logger'
 
 // load from data-behaviours
-loadApp(name => import(`@/behaviours/${name}`), document.body)
+loadApp(name => import(`./behaviours/${name}`), document.body)
 
 // load from file
 loadModule({
