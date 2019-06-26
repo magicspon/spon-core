@@ -2,17 +2,29 @@
 
 /**
  * @function registerPlugins
- * @param {Map} cache
+ * @description This function is used to add additional properties and methods
+ * to the loaded modules. When the module is wrapped with a higher order function
+ * that has access to the result of `registerPlugins(cache)` we can register new
+ * behaviours and expose a function to clear up any actions applied when the module
+ * is destroyed between page views
+ * @param {Map} cache The behaviours Map. this is where all of the behaviours are added/edited and removed
  * @return {function}
  */
 function registerPlugins(cache) {
 	/**
-	 * @function setCacheKey
+	 * @descrition Register the plugin with the module
+	 * this is called each time a module is loaded
+	 * @function registerId
 	 * @param {string} id
 	 * @return {function}
 	 */
-	return function setCacheKey(id) {
+	return function registerId(id) {
 		/**
+		 * @description this is called for each plugin, each plugin
+		 * is added to the behaviours plugin array.  Each plugin
+		 * should provide a cleanup function via the register function
+		 * provided to each plugin. This function will be called when
+		 * the behaviour is destroyed
 		 * @function addPlugins
 		 * @param {function} plugin
 		 * @return {void}
@@ -39,6 +51,7 @@ function registerPlugins(cache) {
 
 /**
  * @function renderInTheLoop
+ * @description call the function at the end of the event loop (i think!)
  * @param {function} callback
  * @return {void}
  */
@@ -51,8 +64,11 @@ function renderInTheLoop(callback) {
 const cache = new Map()
 
 /**
- * return a registerPlugin function, this is used to
- * add plugins to the cache
+ * create a registerPlugin function with the cache.
+ * this is used to manage extra functionality added
+ * to modules via the withPlugins or connect high
+ * order functions from @spon/plugins and @spon/connect
+ * respectively
  *
  * @public
  * @type {Object}
@@ -61,6 +77,22 @@ export const registerPlugin = registerPlugins(cache)
 
 /**
  * @function loadModule
+ * @description this function is used by the loadApp function for each data-behaviour
+ * it can also be used on it's own to load modules directly, without data-behaviour
+ * attributes or code splitting
+ * @example
+ *
+ * import { loadModule } from '@spon/core'
+ * import logger from './behaviours/logger'
+ *
+ * // load from file
+ * loadModule({
+ * 	module: logger, // required
+ * 	id: 'hello', // required
+ * 	node: document.getElementById('logger') // default undefined,
+ * 	keepAlive: true // default undefined
+ * })
+ *
  * @param {Object} props
  * @property {Function} props.module
  * @property {string} props.id
@@ -88,12 +120,28 @@ export function loadModule({ module, id, keepAlive, node, ...props }) {
 
 /**
  * @function loadApp
- * @namespace loadApp
+ * @description this function is used to dynamically load data-behaviour
+ * modules asynchronous with code splitting.
+ * @example
+ *
+ * import { loadApp } from '@spon/core'
+ *
+ * loadApp(name => import(`./behaviours/${name}`), document.body)
+ *
  * @param {Function} moduleLoader the dynamic import function
  * @param {HTMLElement} context the root html element to query from
  * @return {App}
  */
 export function loadApp(moduleLoader, context) {
+	/**
+	 *
+	 * @param {object} props
+	 * @property {string} props.behaviour the js file to load
+	 * @property {string} props.id the behaviour id
+	 * @property {bool} props.keepAlive should the module be destroyed between page views
+	 * @property {HTMLElement} props.node the html element to load the element against
+	 * @return {void}
+	 */
 	function fetchBehaviour({ behaviour, id, keepAlive, node }) {
 		moduleLoader(behaviour).then(resp => {
 			const { default: module } = resp
@@ -103,10 +151,10 @@ export function loadApp(moduleLoader, context) {
 
 	/**
 	 * @function hydrate
-	 * @description queries the given context for elements with data-behaviour attributes
-	 * any matches are added to the cache.
-	 * the scan function is then called, as well as a window resize event is added
-	 * which also calls the scan function
+	 * @description query the dom for elements attrubtes with a data-behaviour attribute
+	 * Get the value... check to see if there is a query attribute, if so wait for the query
+	 * to be valid and then fetch, if not, fetch the file with the matching name and load
+	 * the behaviour.  Add the items to the cache. And yup
 	 * @param {HTMLElement} context the node to query from
 	 * @return {void}
 	 */
@@ -127,17 +175,24 @@ export function loadApp(moduleLoader, context) {
 						)
 					}
 
+					// add the item to the cache.
 					cache.set(id, {
 						name: id,
 						hasLoaded: false
 					})
 
+					// if there is a data-query attribute
 					if (query) {
 						const mql = window.matchMedia(query)
+						// does it already match
 						if (mql.matches) {
+							// load the behaviour
 							fetchBehaviour(props)
 						}
 
+						// the matchMedia event handle. we need to store
+						// a reference to the function so we can remove
+						// when unmounting
 						const handle = ({ matches }) => {
 							const item = cache.get(id)
 							if (!matches && item.hasLoaded === true) {
@@ -153,6 +208,7 @@ export function loadApp(moduleLoader, context) {
 
 						mql.addListener(handle)
 
+						// add the mql and handle to the cache
 						cache.set(id, {
 							...cache.get(id),
 							query: {
