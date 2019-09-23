@@ -4,12 +4,18 @@
 			"presets": [
 				[
 					"@babel/preset-env",
+
 					{
 						"modules": "umd"
 					}
 				]
 			],
-			"plugins": ["@babel/plugin-transform-modules-commonjs"]
+			"plugins": [
+				"@babel/plugin-transform-modules-commonjs",
+				"@babel/plugin-syntax-dynamic-import",
+				"@babel/plugin-transform-runtime",
+				"@babel/plugin-transform-async-to-generator"
+			]
 		},
 		"production": {
 			"ignore": ["node_modules/**", "*.test.js"]

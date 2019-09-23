@@ -27,70 +27,60 @@
 		"test": "jest",
 		"test:watch": "jest --watch"
 	},
-	"jest": {
-		"testURL": "http://localhost:3000/",
-		"setupFiles": [
-			"<rootDir>/setup-jest.js"
-		],
-		"collectCoverageFrom": [
-			"src/js/core/**/*.{js,jsx,ts,tsx}",
-			"!**/node_modules/**",
-			"!cypress/**"
-		],
-		"testMatch": [
-			"**/?(*.)(spec|test).js?(x)"
-		],
-		"testPathIgnorePatterns": [
-			"/node_modules/",
-			"/cypress"
-		]
-	},
 	"quokka": {
 		"babel": {
-			"env": "test"
+			"env": "test",
+			"configFile": "./.babelrc",
+			"polyfill": true
 		},
 		"installPackageCommand": "yarn add {packageName}",
 		"plugins": [
 			"jsdom-quokka-plugin"
-		]
+		],
+		"env": {
+			"params": {
+				"env": "NODE_ENV=test"
+			}
+		}
 	},
 	"devDependencies": {
-		"@babel/cli": "^7.0.0-beta.54",
-		"@babel/core": "^7.0.0-beta.54",
-		"@babel/plugin-proposal-class-properties": "^7.3.0",
+		"@babel/cli": "^7.6.0",
+		"@babel/core": "^7.6.0",
+		"@babel/plugin-proposal-class-properties": "^7.5.5",
 		"@babel/plugin-syntax-dynamic-import": "^7.2.0",
-		"@babel/plugin-transform-async-to-generator": "^7.2.0",
-		"@babel/plugin-transform-modules-commonjs": "^7.2.0",
-		"@babel/plugin-transform-runtime": "^7.2.0",
-		"@babel/preset-env": "^7.0.0-beta.54",
-		"@babel/runtime": "^7.3.1",
-		"@rematch/core": "^1.0.6",
+		"@babel/plugin-transform-async-to-generator": "^7.5.0",
+		"@babel/plugin-transform-modules-commonjs": "^7.6.0",
+		"@babel/plugin-transform-runtime": "^7.6.0",
+		"@babel/preset-env": "^7.6.0",
+		"@babel/runtime": "^7.6.0",
+		"@rematch/core": "^1.2.0",
+		"@testing-library/dom": "^6.3.0",
+		"@testing-library/jest-dom": "^4.1.0",
 		"babel-core": "^7.0.0-bridge.0",
-		"babel-eslint": "^10.0.1",
-		"babel-jest": "22.4.3",
-		"babel-plugin-dynamic-import-node": "^2.2.0",
-		"codecov": "^3.0.2",
+		"babel-eslint": "^10.0.3",
+		"babel-jest": "24.9.0",
+		"babel-plugin-dynamic-import-node": "^2.3.0",
+		"codecov": "^3.6.1",
 		"dom-testing-library": "^3.16.5",
-		"eslint": "^4.19.1",
-		"eslint-config-airbnb": "^16.1.0",
-		"eslint-config-prettier": "^4.0.0",
-		"eslint-plugin-import": "^2.9.0",
-		"eslint-plugin-jest": "^22.3.0",
-		"eslint-plugin-jsx-a11y": "^6.2.1",
-		"eslint-plugin-react": "^7.12.4",
+		"eslint": "^6.4.0",
+		"eslint-config-airbnb": "^18.0.1",
+		"eslint-config-prettier": "^6.3.0",
+		"eslint-plugin-import": "^2.18.2",
+		"eslint-plugin-jest": "^22.17.0",
+		"eslint-plugin-jsx-a11y": "^6.2.3",
+		"eslint-plugin-react": "^7.14.3",
 		"identity-obj-proxy": "^3.0.0",
-		"jest": "^24.1.0",
-		"jest-dom": "^3.1.0",
-		"rollup": "^0.58.1",
-		"rollup-plugin-babel": "^4.0.0-beta.4",
-		"rollup-plugin-babel-minify": "^4.0.0",
-		"rollup-plugin-commonjs": "^9.1.0",
-		"rollup-plugin-filesize": "^1.5.0",
+		"jest": "^24.9.0",
+		"rollup": "^1.21.4",
+		"rollup-plugin-babel": "^4.3.3",
+		"rollup-plugin-babel-minify": "^9.1.0",
+		"rollup-plugin-commonjs": "^10.1.0",
+		"rollup-plugin-filesize": "^6.2.0",
 		"rollup-plugin-local-resolve": "^1.0.7",
-		"rollup-plugin-node-resolve": "^3.3.0",
+		"rollup-plugin-node-resolve": "^5.2.0",
 		"rollup-plugin-peer-deps-external": "^2.1.0",
-		"rollup-plugin-postcss": "^1.5.1",
-		"rollup-plugin-terser": "^1.0.1",
+		"rollup-plugin-postcss": "^2.0.3",
+		"rollup-plugin-terser": "^5.1.2",
 		"source-map-loader": "^0.2.3"
 	},
 	"publishConfig": {

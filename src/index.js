@@ -55,13 +55,13 @@ function registerPlugins(cache) {
  * @param {function} callback
  * @return {void}
  */
-function renderInTheLoop(callback) {
+export function renderInTheLoop(callback) {
 	requestAnimationFrame(() => {
 		requestAnimationFrame(() => callback())
 	})
 }
 
-const cache = new Map()
+export const cache = new Map()
 
 /**
  * create a registerPlugin function with the cache.
@@ -109,6 +109,12 @@ export function loadModule({ module, id, keepAlive, node, ...props }) {
 		destroy: fn,
 		hasLoaded: true
 	})
+}
+
+export function unLoadModule(id) {
+	const { destroy } = cache.get(id)
+	if (destroy) destroy()
+	cache.delete(id)
 }
 
 /**
@@ -195,13 +201,13 @@ export function loadApp(moduleLoader, context) {
 						// when unmounting
 						const handle = ({ matches }) => {
 							const item = cache.get(id)
-							if (!matches && item.hasLoaded === true) {
+							if (!matches && item.hasLoaded) {
 								const { destroy, plugins = [], ...rest } = item
 								;[destroy, ...plugins].forEach(fn => {
 									if (typeof fn === 'function') fn()
 								})
 								cache.set(id, { ...rest, hasLoaded: false })
-							} else if (matches && item.hasLoaded === false) {
+							} else if (matches && !item.hasLoaded) {
 								fetchBehaviour(props)
 							}
 						}
