@@ -11,12 +11,12 @@ import {
 
 describe('test loadApp', () => {
 	const fns = {
-		sandbox: jest.fn(() => () => {}),
-		responsive: jest.fn(() => () => {})
+		sandbox: jest.fn(() => jest.fn()),
+		responsive: jest.fn(() => jest.fn())
 	}
 
 	const mockLoader = name => {
-		return Promise.resolve({ default: fns[name]() })
+		return Promise.resolve({ default: fns[name] })
 	}
 
 	beforeAll(() => {
@@ -128,16 +128,19 @@ describe('test loadApp', () => {
 			hasLoaded: true
 		})
 
+		expect(app.cache.size).toBe(2)
 		expect(fns.sandbox).toHaveBeenCalledTimes(1)
 		expect(fns.responsive).not.toHaveBeenCalled()
 	})
 
 	it('should load behaviours once the query is valid', async () => {
+		const handle = jest.fn()
+
 		Object.defineProperty(window, 'matchMedia', {
 			value: jest.fn(() => {
 				return {
 					matches: true,
-					addListener: jest.fn(),
+					addListener: jest.fn(handle),
 					removeListener: jest.fn()
 				}
 			})
@@ -146,5 +149,16 @@ describe('test loadApp', () => {
 		await wait()
 
 		expect(fns.responsive).toHaveBeenCalledTimes(1)
+	})
+
+	it('should destroy active modules and remove items from the cache', async () => {
+		const app = loadApp(mockLoader, document.body)
+		await wait()
+
+		const item = cache.get('a')
+		app.destroy()
+
+		expect(item.destroy.mock.calls.length).toBe(1)
+		expect(app.cache.size).toBe(0)
 	})
 })
