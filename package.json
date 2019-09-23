@@ -61,7 +61,6 @@
 		"babel-jest": "24.9.0",
 		"babel-plugin-dynamic-import-node": "^2.3.0",
 		"codecov": "^3.6.1",
-		"dom-testing-library": "^3.16.5",
 		"eslint": "^6.4.0",
 		"eslint-config-airbnb": "^18.0.1",
 		"eslint-config-prettier": "^6.3.0",
